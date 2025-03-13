@@ -1,9 +1,12 @@
 name: dl-final-project
 channels:
+  - pytorch
+  - nvidia   # Required for CUDA if using GPU
+  - huggingface
   - conda-forge
   - defaults
 dependencies:
-  - python=3.10  # More compatible version
+  - python=3.10  # Ensuring compatibility
   - numpy
   - pandas
   - tqdm
@@ -23,7 +26,15 @@ dependencies:
   - pytz
   - safetensors
   - six
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cudatoolkit=11.8  # Ensure CUDA support for GPU acceleration
   - pip
   - pip:
       - aiohappyeyeballs
       - urllib3
+      - accelerate  # For efficient training on Hugging Face models
+      - torchtext
+      - torchdata
+      - sentencepiece  # Needed for tokenization
