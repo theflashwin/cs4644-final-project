@@ -16,7 +16,7 @@ export HUGGINGFACE_HUB_TOKEN=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
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 # Change directory to your project directory
-cd /storage/ice1/2/7/svijayasankar3/train/cs4644-final-project
+# cd /storage/ice1/2/7/svijayasankar3/train/cs4644-final-project
 
 # Run the data preprocessing script
 echo "Running data_preprocessing.py..."
