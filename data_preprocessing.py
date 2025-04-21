@@ -34,16 +34,15 @@ def preprocess(example):
     input_enc["labels"] = output_enc["input_ids"]
     return input_enc
 
-print("Tokenizing dataset...")
-processed_dataset = dataset["train"].map(preprocess, batched=False)
+# Split into train and test
+split_dataset = dataset["train"].train_test_split(test_size=0.1, seed=42)
 
-print("\nExample of processed data:\n")
-for idx in range(3):
-    print(f"Problem {idx+1}: {tokenizer.decode(processed_dataset[idx]['input_ids'])}")
-    print(f"Solution {idx+1}: {tokenizer.decode(processed_dataset[idx]['labels'])}")
-    print("=" * 80)
+# Tokenize both splits
+processed_train = split_dataset["train"].map(preprocess, batched=False)
+processed_test = split_dataset["test"].map(preprocess, batched=False)
 
-# Save the processed dataset for faster future loading.
-processed_dataset.save_to_disk("./processed_math_dataset")
+# Optionally save both to disk
+processed_train.save_to_disk("./processed_math_dataset/train")
+processed_test.save_to_disk("./processed_math_dataset/test")
 
 print("Done!")

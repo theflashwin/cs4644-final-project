@@ -26,9 +26,13 @@ python data_preprocessing.py || { echo "Data preprocessing failed!"; exit 1; }
 echo "Running model_setup.py..."
 python model_setup.py || { echo "Model setup failed!"; exit 1; }
 
-# Run the training script (requires GPU for efficient training)
-echo "Running train.py..."
-python train.py || { echo "Training failed!"; exit 1; }
+# Check if final model already exists to avoid retraining
+if [ -d "./final_model" ] && [ "$(ls -A ./final_model)" ]; then
+  echo "Found existing final_model directory; skipping training."
+else
+  echo "Running train.py..."
+  python train.py || { echo "Training failed!"; exit 1; }
+fi
 
 # Run the inference script to test the final model output
 echo "Running inference.py..."

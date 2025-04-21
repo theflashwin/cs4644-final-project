@@ -3,32 +3,48 @@ import torch
 from datasets import load_from_disk
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, Trainer, DataCollatorForLanguageModeling
 from peft import PeftModel  # for sanity-checking trainable parameters (optional)
+from ContextDistillation import ContextDistillationTrainer
 
 # 1. Load the preprocessed dataset (saved from data_preprocessing.py)
 print("Loading processed dataset from disk...")
 dataset = load_from_disk("./processed_math_dataset")["train"]
 
-# 2. Load the model saved by model_setup.py.
-# Note: We saved the model to "./model_setup_output" (which includes LoRA adapters and quantization).
-model_checkpoint = "./model_setup_output"
-print("Loading model from checkpoint...")
-model = AutoModelForCausalLM.from_pretrained(
-    model_checkpoint,
+# 2. --- LOAD MODELS ---
+print("Loading student model...")
+student_model = AutoModelForCausalLM.from_pretrained(
+    "./model_setup_output/student_model",
     trust_remote_code=True,
-    device_map="auto"  # auto-assigns layers to devices (GPU usage is recommended)
+    device_map="auto"
 )
+
+# Load the teacher model from local setup (frozen)
+print("Loading teacher model...")
+teacher_model = AutoModelForCausalLM.from_pretrained(
+    "./model_setup_output/teacher_model",
+    trust_remote_code=True,
+    device_map="auto"
+)
+teacher_model.eval()
+
 # Optionally, print the number of trainable parameters (with LoRA, this should be a fraction of the full model)
-total_params = sum(p.numel() for p in model.parameters())
-trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+total_params = sum(p.numel() for p in student_model.parameters()) + sum(p.numel() for p in teacher_model.parameters())
+trainable_params = sum(p.numel() for p in student_model.parameters() if p.requires_grad)
 print(f"Total parameters: {total_params:,}")
 print(f"Trainable parameters: {trainable_params:,}")
 
-# 3. Load the tokenizer (should be consistent with the model)
+# 3. --- LOAD THE TOKENIZERS ---
 print("Loading tokenizer...")
+# tokenizer = AutoTokenizer.from_pretrained(
+#     studen,
+#     trust_remote_code=True
+# )
+# tokenizer.pad_token = tokenizer.eos_token
+
 tokenizer = AutoTokenizer.from_pretrained(
-    model_checkpoint,
-    trust_remote_code=True
+    "./model_setup_output/student_model",
+    trust_remote_code=True,
 )
+
 tokenizer.pad_token = tokenizer.eos_token
 
 # 4. Set up training arguments.
@@ -48,11 +64,15 @@ training_args = TrainingArguments(
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
 # 6. Create the Trainer.
-trainer = Trainer(
-    model=model,
+trainer = ContextDistillationTrainer(
+    teacher_model=teacher_model,
+    temp=2.0,
+    alpha=0.5,
+    model=student_model,
     args=training_args,
     train_dataset=dataset,
     data_collator=data_collator,
+    tokenizer=tokenizer
 )
 
 # 7. Start training.
