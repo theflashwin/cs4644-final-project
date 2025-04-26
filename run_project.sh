@@ -16,7 +16,7 @@ export HUGGINGFACE_HUB_TOKEN=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
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 # Change directory to your project directory
-# cd /storage/ice1/2/7/svijayasankar3/train/cs4644-final-project
+cd /storage/ice1/2/7/svijayasankar3/train/cs4644-final-project
 
 # Run the data preprocessing script
 echo "Running data_preprocessing.py..."
@@ -27,7 +27,7 @@ echo "Running model_setup.py..."
 python model_setup.py || { echo "Model setup failed!"; exit 1; }
 
 echo "Initial inference run..."
-python inference.py || { echo "Initial interence run failed"; exit 1; }
+python initial_inference.py || { echo "Initial interence run failed"; exit 1; }
 
 # Check if final model already exists to avoid retraining
 if [ -d "./final_model" ] && [ "$(ls -A ./final_model)" ]; then

@@ -1,0 +1,35 @@
+# Ignore model folders
+final_model_v2/
+model_setup_output/
+train_output/
+train_output_v2/
+
+# Ignore processed dataset
+processed_math_dataset/
+
+# Ignore output result files
+inference_results.jsonl
+inference_results.png
+initial_inference_results.jsonl
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore large intermediate files
+*.ckpt
+*.bin
+*.pth
+
+# Ignore shell scripts outputs if any logs are made
+*.log
+
+# Optional: ignore Jupyter notebook checkpoints (if any)
+.ipynb_checkpoints/
+
+# General VSCode or IDE folders (optional, but safe)
+.vscode/
+.idea/
+
+# Miscellaneous
+.DS_Store
