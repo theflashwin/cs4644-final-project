@@ -1,8 +1,8 @@
-# Context Distillation for Mathematical Reasoning in LLMs
+# Knowledge Distillation for Mathematical Reasoning in LLMs
 
 ## Project Overview
 
-This project explores the application of Context Distillation (CD) and Low-Rank Adaptation (LoRA) techniques to improve the mathematical reasoning capabilities of smaller large language models (LLMs). Our goal is to train a smaller student model to mimic the in-context learning behavior of a larger teacher model, without requiring massive computational resources during inference. We specifically target mathematical problem-solving tasks using the OpenR1-Math-220k dataset as our benchmark.
+This project explores the application of Knowledge Distillation (KD) and Low-Rank Adaptation (LoRA) techniques to improve the mathematical reasoning capabilities of smaller large language models (LLMs). Our goal is to train a smaller student model to mimic the in-context learning behavior of a larger teacher model, without requiring massive computational resources during inference. We specifically target mathematical problem-solving tasks using the OpenR1-Math-220k dataset as our benchmark.
 
 Through this approach, we aim to bridge the performance gap between large and small models, providing a scalable and resource-efficient framework for advanced math reasoning in real-world applications.
 
